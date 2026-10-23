@@ -1,5 +1,6 @@
 import asyncio
 import json
+import sys
 from typing import Optional, Dict, Any, Tuple
 from ...core.config import settings
 from ...core.logging import structured_logger
@@ -11,7 +12,12 @@ async def inspect_with_yt_dlp(url: str, request_id: str) -> Tuple[bool, Optional
     Returns: (success, metadata_dict, error_code, error_message)
     """
     cmd = [
-        "yt-dlp",
+        # Invoke the installed module with the running interpreter.  Vercel's
+        # Python runtime installs console scripts outside the function PATH,
+        # while the module itself is always available in this environment.
+        sys.executable,
+        "-m",
+        "yt_dlp",
         "--dump-json",
         "--no-playlist",
         "--no-warnings",

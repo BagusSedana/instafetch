@@ -1,5 +1,6 @@
 import asyncio
 import json
+import sys
 from typing import Optional, List, Dict, Any, Tuple
 from ...core.config import settings
 from ...core.logging import structured_logger
@@ -11,7 +12,11 @@ async def inspect_with_gallery_dl(url: str, request_id: str) -> Tuple[bool, Opti
     Returns: (success, items_list, error_code, error_message)
     """
     cmd = [
-        "gallery-dl",
+        # See yt_dlp_adapter: do not rely on a console-script binary being on
+        # PATH in a Vercel Python function.
+        sys.executable,
+        "-m",
+        "gallery_dl",
         "--dump-json",
         "--no-config",
         url,
